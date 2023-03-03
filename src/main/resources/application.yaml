@@ -1,0 +1,32 @@
+spring:
+  config:
+    import: optional:.env[.properties]
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: car-service
+          uri: lb://car-service
+          predicates:
+            - Path=/api/car-service/**
+        - id: inventory-service
+          uri: lb://inventory-service
+          predicates:
+            - Path=/api/inventory/**
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE-URL}
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    root: info
+    org.springframework.cloud.gateway.route.RouteDefinitionLocator: info
+    org.springframework. cloud.gateway: trace
